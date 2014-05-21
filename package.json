@@ -1,0 +1,7 @@
+{
+  "name": "ejectapp",
+  "version": "0.0.1",
+  "bin": {
+    "ejectapp": "src/ejectapp.js"
+  },
+}
