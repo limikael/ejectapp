@@ -4,28 +4,35 @@ var EventDispatcher = require("./EventDispatcher");
 var fs = require("fs");
 var http = require("http");
 var https = require("https");
+var url = require("url");
+var path = require("path");
 
 /**
  * Downloads a saves a file.
  * @class FileDownloader
  */
 function FileDownloader() {
+	Thenable.call(this);
+
 	this.redirects=0;
 }
 
-FunctionUtil.extend(FileDownloader, EventDispatcher);
+FunctionUtil.extend(FileDownloader, Thenable);
 
 /**
  * Set url.
  */
-FileDownloader.prototype.setUrl=function(url) {
-	this.url=url;
+FileDownloader.prototype.setUrl=function(downloadUrl) {
+	this.downloadUrl=downloadUrl;
+
+	if (!this.fileName)
+		this.fileName=path.basename(this.downloadUrl);
 }
 
 /**
  * Set file name.
  */
-FileDownloader.prototype.setTargetFileName=function(fileName) {
+FileDownloader.prototype.setTarget=function(fileName) {
 	this.fileName=fileName;
 }
 
@@ -33,31 +40,64 @@ FileDownloader.prototype.setTargetFileName=function(fileName) {
  * Do the download.
  */
 FileDownloader.prototype.download = function() {
-	this.request=https.get(this.url,this.onResponse.bind(this));
+	if (!this.downloadUrl)
+		throw new Error("No url provided");
+
+	if (!this.fileName)
+		throw new Error("No target file name");
+
+	//console.log(this.downloadUrl);
+
+	var urlComponents=url.parse(this.downloadUrl);
+
+	switch (urlComponents.protocol) {
+		case "http:":
+			this.request=http.get(this.downloadUrl,this.onResponse.bind(this));
+			break;
+
+		case "https:":
+			this.request=https.get(this.downloadUrl,this.onResponse.bind(this));
+			break;
+
+		default:
+			throw new Error("Unknown protocol: "+urlComponents.protocol);
+	}
+
+	return this;
 }
 
+/**
+ * Got response, start download
+ * @private
+ */
 FileDownloader.prototype.onResponse=function(response) {
 	var scope=this;
 
 	switch (response.statusCode) {
 		case 200:
+			//console.log("will download: "+response.headers["content-length"]);
+
 			this.file=fs.createWriteStream(this.fileName);
+			this.file.on("finish",this.onFileFinish.bind(this));
+
 			response.pipe(this.file);
-			scope.file.on("finish",function() {
-				scope.file.close(scope.handleFinished);
-			});
 			break;
 
+		case 301:
 		case 302:
 			this.redirects++;
 
 			if (this.redirects>10)
 				throw new Error("Redirect loop.");
 
-			this.url=response.headers.location;
+			this.downloadUrl=response.headers.location;
 			this.request.abort();
 
 			this.download();
+			break;
+
+		case 404:
+			this.notifyError("404 Not found");
 			break;
 
 		default:
@@ -66,8 +106,19 @@ FileDownloader.prototype.onResponse=function(response) {
 	}
 }
 
-FileDownloader.prototype.handleFinished=function() {
-	console.log("downloaded");
+/**
+ * Finish.
+ * @private
+ */
+FileDownloader.prototype.onFileFinish=function() {
+	this.file.close(this.onFileClosed.bind(this));
+}
+
+/**
+ * @private
+ */
+FileDownloader.prototype.onFileClosed=function() {
+	this.notifySuccess();
 }
 
 module.exports = FileDownloader;
