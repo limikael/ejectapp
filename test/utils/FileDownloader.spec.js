@@ -18,8 +18,16 @@ describe("FileDownloader",function() {
 		FileUtil.rmForceSync("5MB.zip");
 
 		f.setUrl("http://download.thinkbroadband.com/5MB.zip");
+
+		var progresses=[];
+
+		f.on("progress",function() {
+			progresses.push(f.getProgress());
+		});
+
 		f.download().then(
 			function() {
+				expect(progresses.length).toBeGreaterThan(2);
 				expect(fs.existsSync("5MB.zip")).toBe(true);
 				FileUtil.rmForceSync("5MB.zip");
 				done();
@@ -87,9 +95,5 @@ describe("FileDownloader",function() {
 				done();
 			}
 		);
-	});
-
-	it("can check progress",function() {
-
 	});
 });

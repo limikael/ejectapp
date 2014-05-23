@@ -15,6 +15,7 @@ function FileDownloader() {
 	Thenable.call(this);
 
 	this.redirects=0;
+	this.reportedProgress=0;
 }
 
 FunctionUtil.extend(FileDownloader, Thenable);
@@ -75,12 +76,15 @@ FileDownloader.prototype.onResponse=function(response) {
 
 	switch (response.statusCode) {
 		case 200:
+			this.contentLength=response.headers["content-length"];
 			//console.log("will download: "+response.headers["content-length"]);
 
 			this.file=fs.createWriteStream(this.fileName);
 			this.file.on("finish",this.onFileFinish.bind(this));
 
 			response.pipe(this.file);
+			this.progressInterval=setInterval(this.onProgressInterval.bind(this),1000);
+			this.trigger("progress");
 			break;
 
 		case 301:
@@ -107,6 +111,22 @@ FileDownloader.prototype.onResponse=function(response) {
 }
 
 /**
+ * Get progress in percent.
+ */
+FileDownloader.prototype.getProgress=function() {
+	if (!fs.existsSync(this.fileName))
+		return 0;
+
+	var stat=fs.statSync(this.fileName);
+	var size=stat.size;
+
+	if (this.contentLength)
+		return Math.round(100*size/this.contentLength);
+
+	return 0;
+}
+
+/**
  * Finish.
  * @private
  */
@@ -118,7 +138,23 @@ FileDownloader.prototype.onFileFinish=function() {
  * @private
  */
 FileDownloader.prototype.onFileClosed=function() {
+	clearInterval(this.progressInterval);
+	this.progressInterval=null;
+
+	this.trigger("progress");
 	this.notifySuccess();
+}
+
+/**
+ * @private
+ */
+FileDownloader.prototype.onProgressInterval=function() {
+	var progress=this.getProgress();
+
+	if (progress!=this.reportedProgress) {
+		this.reportedProgress=progress;
+		this.trigger("progress");
+	}
 }
 
 module.exports = FileDownloader;

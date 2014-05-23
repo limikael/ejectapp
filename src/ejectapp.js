@@ -4,6 +4,8 @@
  * Set things up.
  */
 function setup() {
+//	FiberFileDownloader
+
 	console.log("Downloading and setting up build environment...");
 }
 

@@ -1,13 +1,17 @@
 {
   "name": "ejectapp",
   "version": "0.0.1",
+  "repository": "https://github.com/limikael/ejectapp.git",
   "bin": {
     "ejectapp": "src/ejectapp.js"
   },
   "devDependencies": {
-    "fiberjob": "0.0.1",
-    "fibers": "^1.0.1",
     "grunt": "^0.4.5",
     "jasmine-node": "^1.14.3"
+  },
+  "dependencies": {
+    "fiberjob": "0.0.1",
+    "fibers": "^1.0.1",
+    "wrench": "~1.5.8"
   }
 }
