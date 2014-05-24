@@ -104,6 +104,10 @@ FileDownloader.prototype.onResponse=function(response) {
 			this.notifyError("404 Not found");
 			break;
 
+		case 401:
+			this.notifyError("401 Unauthorized");
+			break;
+
 		default:
 			throw new Error("Unknown http status: "+response.statusCode);
 			break;
