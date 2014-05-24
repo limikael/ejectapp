@@ -25,4 +25,13 @@ FileUtil.rmForceSync = function(fileName) {
 		throw new Error("Unable to remove " + fileName);
 }
 
+/**
+ * Ensure directory exists.
+ */
+FileUtil.ensureDirectorySync = function(dirName) {
+	if (!fs.existsSync(dirName))
+		fs.mkdirSync(dirName);
+}
+
+
 module.exports=FileUtil;

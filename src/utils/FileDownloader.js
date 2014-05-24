@@ -51,6 +51,9 @@ FileDownloader.prototype.download = function() {
 
 	var urlComponents=url.parse(this.downloadUrl);
 
+	if (fs.existsSync(this.fileName))
+		fs.unlinkSync(this.fileName);
+
 	switch (urlComponents.protocol) {
 		case "http:":
 			this.request=http.get(this.downloadUrl,this.onResponse.bind(this));
