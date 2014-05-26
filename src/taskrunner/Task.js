@@ -38,6 +38,15 @@ Task.prototype.taskMessage = function(m) {
  * Run the task.
  */
 Task.prototype.run = function() {
+	if (this.condition) {
+		if (this.condition.check()) {
+			this.taskMessage("skip");
+			console.log("");
+			this.notifySuccess();
+			return this;
+		}
+	}
+
 	this.progressStream = progress();
 
 	this.progressStream.on("progress", this.onProgressStreamProgress.bind(this));
@@ -53,6 +62,15 @@ Task.prototype.run = function() {
  * Complete.
  */
 Task.prototype.notifyComplete = function() {
+	if (this.condition) {
+		if (!this.condition.check()) {
+			this.taskMessage("FAIL");
+
+			throw new Error("Task failed!!!")
+			return;
+		}
+	}
+
 	this.taskMessage("OK");
 	console.log("");
 

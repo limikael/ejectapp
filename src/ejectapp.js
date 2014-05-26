@@ -22,7 +22,7 @@ function setup() {
 
 /*		task=new ExtractTask("Extracting Ejecta-X");
 		task.setSrc(__dirname + "/../content/Ejecta-X-v0.8.0.zip");
-		task.setDest(__dirname + "/../content/Ejecta-X");
+		task.setDest(__dirname + "/../content/Ejecta-X-v0.8.0");
 		runner.addTask(task);*/
 
 		runner.run();

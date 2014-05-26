@@ -1,4 +1,5 @@
 var FunctionUtil = require("../utils/FunctionUtil");
+var CheckFileCondition = require("../taskrunner/CheckFileCondition");
 var Task = require("../taskrunner/Task");
 var request = require("request");
 var fs = require("fs");
@@ -24,6 +25,8 @@ DownloadFileTask.prototype.setSrc = function(value) {
  */
 DownloadFileTask.prototype.setDest = function(value) {
 	this.dest = value;
+
+	this.condition=new CheckFileCondition(this.dest);
 }
 
 /**
