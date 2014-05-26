@@ -47,7 +47,9 @@ Task.prototype.run = function() {
 		}
 	}
 
-	this.progressStream = progress();
+	this.progressStream = progress({
+		time: 100
+	});
 
 	this.progressStream.on("progress", this.onProgressStreamProgress.bind(this));
 

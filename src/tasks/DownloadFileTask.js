@@ -40,6 +40,9 @@ DownloadFileTask.prototype.start = function() {
 	this.writer.on("finish", this.onWriterFinish.bind(this));
 }
 
+/**
+ * Writer finish.
+ */
 DownloadFileTask.prototype.onWriterFinish = function() {
 	this.writer.close(this.notifyComplete.bind(this));
 }
