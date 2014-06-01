@@ -10,8 +10,12 @@
     "jasmine-node": "^1.14.3"
   },
   "dependencies": {
-    "fiberjob": "0.0.1",
+    "adm-zip": "^0.4.4",
+    "elementtree": "^0.1.6",
+    "fiberjob": "0.0.3",
     "fibers": "^1.0.1",
+    "minimist": "^0.1.0",
+    "node-zip": "^1.1.0",
     "progress-stream": "~0.5.0",
     "request": "~2.36.0",
     "unzip": "~0.1.9",

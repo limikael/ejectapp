@@ -1,0 +1,3 @@
+[submodule "extern/Ejecta-X"]
+	path = extern/Ejecta-X
+	url = https://github.com/Wizcorp/Ejecta-X.git
