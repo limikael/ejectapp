@@ -17,7 +17,7 @@ function AndroidPackager(mainSourceFileName) {
 	if (!StringUtil.endsWith(this.mainSourceFileName, ".js"))
 		throw new Error("Input file shoud be a .js file");
 
-	this.outputFileName = this.mainSourceFileName.substring(0, this.mainSourceFileName.length - 3) + ".apk";
+	this.outputFileName = path.basename(this.mainSourceFileName, ".js") + ".apk";
 	this.appName = path.basename(this.mainSourceFileName, ".js");
 
 	var id = path.basename(this.mainSourceFileName, ".js");
