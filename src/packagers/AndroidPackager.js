@@ -25,6 +25,7 @@ function AndroidPackager(mainSourceFileName) {
 	id = id.replace(" ", "");
 
 	this.packageName = "com.impactjs." + id;
+	this.resourceFiles = [];
 }
 
 /**
@@ -52,6 +53,13 @@ AndroidPackager.prototype.setPackageName = function(value) {
 }
 
 /**
+ * Add a resource.
+ */
+AndroidPackager.prototype.addResource = function(resourceFile) {
+	this.resourceFiles.push(resourceFile);
+}
+
+/**
  * Process files.
  */
 AndroidPackager.prototype.processFiles = function() {
@@ -59,6 +67,19 @@ AndroidPackager.prototype.processFiles = function() {
 
 	fs.unlinkSync(this.workDir + "/assets/www/index.js");
 	FileUtil.copySync(this.mainSourceFileName, this.workDir + "/assets/www/" + sourceBaseName);
+
+	var r;
+
+	for (r in this.resourceFiles) {
+		var resourceFile = this.resourceFiles[r];
+
+		if (fs.statSync(resourceFile).isDirectory())
+			throw new Error("resource directories is not yet supported");
+
+		var resourceBaseName = path.basename(resourceFile);
+
+		FileUtil.copySync(resourceFile, this.workDir + "/assets/www/" + resourceBaseName);
+	}
 }
 
 /**

@@ -14,13 +14,14 @@ function usage() {
 	console.log("  --output=<file>    Specify output file.");
 	console.log("  --name=<name>      Specify app name.");
 	console.log("  --package=<name>   Specify app package.");
+	console.log("  --resource=<file>  Include a resource.");
 	console.log("");
 	process.exit();
 }
 
 var options = {
 	boolean: [],
-	string: ["output", "name", "package"]
+	string: ["output", "name", "package", "resource"]
 }
 
 var argv = minimist(process.argv.slice(2), options);
@@ -43,5 +44,15 @@ if (argv.name)
 
 if (argv.package)
 	packager.setPackageName(argv.package);
+
+if (argv.resource) {
+	if (argv.resource instanceof Array) {
+		for (r in argv.resource)
+			packager.addResource(argv.resource[r]);
+	}
+
+	else
+		packager.addResource(argv.resource);
+}
 
 packager.build();

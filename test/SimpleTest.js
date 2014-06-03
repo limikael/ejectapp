@@ -1,7 +1,13 @@
 var context = canvas.getContext("2d");
 
-var percent=0;
-var percentDelta=.01;
+var percent = 0;
+var percentDelta = .01;
+
+var img = new Image();
+
+img.src="bg.png";
+
+console.log("loaded img: "+img);
 
 function animate() {
 	requestAnimationFrame(animate);
@@ -10,18 +16,20 @@ function animate() {
 	var h = window.innerHeight;
 
 	context.fillStyle = '#ff0000';
-	context.fillRect( 0, 0, w*percent, h );
+	context.fillRect(0, 0, w * percent, h);
 
 	context.fillStyle = '#0000ff';
-	context.fillRect( w*percent, 0, w*(1-percent), h );
+	context.fillRect(w * percent, 0, w * (1 - percent), h);
 
-	percent+=percentDelta;
+	percent += percentDelta;
 
-	if (percent>1)
-		percentDelta=-.01;
+	if (percent > 1)
+		percentDelta = -.01;
 
-	if (percent<0)
-		percentDelta=.01;
+	if (percent < 0)
+		percentDelta = .01;
+
+	context.drawImage(img,0,0);
 }
 
 animate();
