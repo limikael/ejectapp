@@ -16,6 +16,8 @@ public class EjectAppActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        Log.d("ejecta","************ creating activity");
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 		int height = getWindowManager().getDefaultDisplay().getHeight();
 	    mGLView = new EjectaGLSurfaceView(this, width, height);
@@ -43,9 +45,12 @@ public class EjectAppActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+        Log.d("ejecta","************ destroying activity");
+
 		// TODO Auto-generated method stub
 		((EjectaGLSurfaceView)mGLView).onDestroy();
 		super.onDestroy();
+        System.exit(0);
 	}
 
 	static {
