@@ -33,6 +33,8 @@ public class EjectAppActivity extends Activity {
                 Log.d("ejecta", "Loading entry javascript: "+jsEntryFile);
 
                 ((EjectaGLSurfaceView)mGLView).loadJavaScriptFile(jsEntryFile);
+
+                //System.exit(0);
             }
         });
 	}

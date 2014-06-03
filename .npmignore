@@ -5,6 +5,5 @@ androidprojector/assets/www/shaders
 androidprojector/src/com/impactjs/ejecta
 androidprojector/libs
 node_modules
-content
 paths.js
 extern/Ejecta-X
