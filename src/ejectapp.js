@@ -2,6 +2,7 @@
 
 var minimist = require("minimist");
 var AndroidPackager = require("./packagers/AndroidPackager");
+var OwnGapPackager = require("./packagers/OwnGapPackager");
 
 /*
  * Print help.
@@ -34,7 +35,7 @@ for (key in argv) {
 		usage();
 }
 
-var packager = new AndroidPackager(argv._[0]);
+var packager = new OwnGapPackager(argv._[0]);
 
 if (argv.output)
 	packager.setOutput(argv.output);
